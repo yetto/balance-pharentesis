@@ -9,15 +9,18 @@ function balancedDelimiters(str) {
 
   for (var i = 0; i < str.length; i++) {
 
-    var o = open.forEach(function(char,id){
+    var o = open.forEach(function(char){
       if (str.charAt(i) === char) {
-        stack.push([i,id])
-        return true
+        // Push index of Character
+        stack.push(i)
+        return true;
       }
     });
 
+    // If opening delimiter, continue to next iteration
     if (o) continue;
 
+    // Pop if matching delimiter is found
     close.forEach(function(char){
       if (str.charAt(i) === char) stack.pop()
     });
@@ -30,7 +33,7 @@ function balancedDelimiters(str) {
 
 /*
   Different strings for testing
-  will log false o true depending
+  will log false or true depending
   if there are balanced or not
 */
 [
