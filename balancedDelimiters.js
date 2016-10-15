@@ -2,8 +2,8 @@
   Input is: [ '{}[]()', '{[}]' ];
   Output should be: ["YES","NO"];
 */
-var input = ['{}[]()', '{[}]'];
-var validate = ["YES", "NO"];
+var input = ['{}[]()', '{[}]', '{test}[]()[{()}]', 'test([])','test([]{)}'];
+var validate = ["YES", "NO", "YES", "YES", "NO"];
 
 function braces(values) {
   var res = [];
@@ -17,37 +17,51 @@ console.log("Success?", output);
 
 /*
   Find if ${string} has balanced
-  scope delimeters.
+  scope delimiters.
 */
 function balancedDelimiters(str) {
   var open = ['(', '[', '{'],
     close = [')', ']', '}'],
     stack = [],
-    position, _VALUE, i, prev = null;
+    _VALUE, i, prev = null,
+    openCheck, closeCheck = -1;
 
-  for (var i = 0; _VALUE = str.charAt(i); i++) {
+  for (i = 0; _VALUE = str.charAt(i); i++) {
 
-    var openCheck = open.indexOf(_VALUE),
-      closeCheck = -1;
+    openCheck = open.indexOf(_VALUE);
 
+    // Lets look for opening delimiters
     if (openCheck != -1) {
-      stack.push(openCheck + 1);
-      position = openCheck;
-    } else if (true) {
-      if (prev === null) return false;
+      // if we find one, push it to the stack
+      stack.push(openCheck);
+    } else {
+      // if we don't, then lets check for closing ones
       closeCheck = close.indexOf(_VALUE);
+      // if prev is null means it is our fist char, if
+      // our first char is a closing delimiter return false
+      if (prev === null && closeCheck != -1) return false;
     }
 
+    // If char is not open or close then continue
     if (openCheck === -1 && closeCheck === -1) continue;
 
-
-    if (prev === stack[stack.length - 1] && closeCheck + 1 === prev) {
-      stack.pop()
+    // If our prev delimiter is for example open[1]
+    // then our closing one should be close[1], this
+    // ensures our prev (opening tag) is the same type
+    if (prev === stack[stack.length - 1]) {
+      if (closeCheck === prev) stack.pop();
+      // If our prev which equals our last found opening
+      // delimiter is not prev then they are not the same
+      // type, therefor return false
+      else if (closeCheck != prev) return false
     }
+
+    // Logs our current delimiter type
     prev = stack[stack.length - 1];
 
   }
 
+  // If our stack is empty, all cool
   return stack.length === 0;
 
 };
